@@ -7,7 +7,7 @@ class SatGenerator:
         self.number = number
         self.head = None
         self.tail = None
-        self.sat_info = {1:Satellite, 2:Satellite, 3:Satellite, 4:Satellite, 5:Satellite, 6:Satellite, 7:Satellite, 8:Satellite, 9:Satellite, 10:Satellite} # 一個軌道固定10顆衛星
+        self.sat_info = {1:Satellite, 2:Satellite, 3:Satellite, 4:Satellite, 5:Satellite, 6:Satellite, 7:Satellite, 8:Satellite, 9:Satellite, 10:Satellite, 11:Satellite} # 一個軌道固定10顆衛星
 
     def add_satellite(self, number, sat_lat, sat_long, coverage):
         if not isinstance(number, Satellite):
@@ -40,23 +40,23 @@ class SatGenerator:
     def add_coverage(self, lat, long):
         R = 6373 * 1000 # 單位: m
         distance = 580 * 1000 
-        azimuth = 135
+        azimuth = 45
         coverage = []
         for i in range(0, len(lat)):
             tmp = []
-            for index in range(0, 4): # +-
+            for index in range(0, 4): # + -
                 if index == 0:
                     lat2 = lat[i] + distance * math.cos(math.radians(azimuth)) / (R * 2 * math.pi / 360)
-                    lon2 = long[i] + distance * math.sin(math.radians(azimuth)) / (R * 2 * math.cos(math.radians(lat[i])) * math.pi/ 360)
+                    lon2 = long[i] + distance * math.sin(math.radians(azimuth)) / (R * math.cos(math.radians(lat[i])) * 2 * math.pi/ 360)
                 elif index == 1:
                     lat2 = lat[i] + distance * math.cos(math.radians(azimuth)) / (R * 2 * math.pi / 360)
-                    lon2 = long[i] - distance * math.sin(math.radians(azimuth)) / (R * 2 * math.cos(math.radians(lat[i])) * math.pi/ 360)
+                    lon2 = long[i] - distance * math.sin(math.radians(azimuth)) / (R * math.cos(math.radians(lat[i])) * 2 * math.pi/ 360)
                 elif index == 2:
                     lat2 = lat[i] - distance * math.cos(math.radians(azimuth)) / (R * 2 * math.pi / 360)
-                    lon2 = long[i] + distance * math.sin(math.radians(azimuth)) / (R * 2 * math.cos(math.radians(lat[i])) * math.pi/ 360)
+                    lon2 = long[i] + distance * math.sin(math.radians(azimuth)) / (R * math.cos(math.radians(lat[i])) * 2 * math.pi/ 360)
                 else:
                     lat2 = lat[i] - distance * math.cos(math.radians(azimuth)) / (R * 2 * math.pi / 360)
-                    lon2 = long[i] - distance * math.sin(math.radians(azimuth)) / (R * 2 * math.cos(math.radians(lat[i])) * math.pi/ 360)
+                    lon2 = long[i] - distance * math.sin(math.radians(azimuth)) / (R *  math.cos(math.radians(lat[i])) * 2 * math.pi/ 360)
                 tmp.append((float(lat2), float(lon2)))
             coverage.append(tmp)
         # print(coverage[0])
@@ -66,13 +66,13 @@ class SatGenerator:
         return self.sat_info
     
 class Satellite:
-    def __init__(self, number, freq, bandwidth, Tx, Rx, channel_num, sat_lat, sat_long, coverage):
+    def __init__(self, number, freq, bandwidth, tx_gain, rx_gain, channel_num, sat_lat, sat_long, coverage):
         self.next = None
         self.number = number
-        self.Freq = freq
-        self.Bandwidth = bandwidth
-        self.Tx = Tx
-        self.Rx = Rx
+        self.freq = freq
+        self.bandwidth = bandwidth
+        self.tx_gain = tx_gain
+        self.rx_gain = rx_gain
         self.numChannel = channel_num
         self.ISL_link = 2
         self.ISL_state = {0, 1}
